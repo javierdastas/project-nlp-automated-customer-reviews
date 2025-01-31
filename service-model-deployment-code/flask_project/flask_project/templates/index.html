@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NLP Model to Automate the Classification of Customer Feedback</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #4b0082, #8a2be2);
+            color: #eae8f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .container {
+            background: #29254d;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h2, h3 {
+            margin: 0;
+        }
+
+        h2 {
+            color: #e0c3fc;
+        }
+
+        h3 {
+            color: #b8a1db;
+            font-weight: 300;
+            margin-top: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area {
+            border: 2px dashed #e0c3fc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            background: #3e326f;
+            position: relative;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area.dragover {
+            background: #6a4eb3;
+            border-color: #cba4ff;
+        }
+
+        .upload-area p {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #eae8f8;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            margin-top: 10px;
+            color: #e0c3fc;
+        }
+
+        .file-list li {
+            font-size: 0.9rem;
+            padding: 5px 0;
+        }
+
+        button {
+            background: #6a4eb3;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #8a2be2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+       
+
+        <h2>Process Sentiment Classification of Customer Feedback</h2>
+        <h3>for Retail Companies</h3>
+
+        <form method="POST" action="/" enctype="multipart/form-data">
+            <div class="upload-area" id="upload-area">
+                <p>Drag & Drop the Customer Feedback CSV here or click to browse</p>
+                <input type="file" name="csv_file" id="csv-file" accept=".csv">
+            </div>
+            <ul class="file-list" id="file-list"></ul>
+            <button type="submit">Upload and Classify</button>
+        </form>
+
+         <!-- Flash messages for errors and success feedback -->
+         {% with messages = get_flashed_messages() %}
+         {% if messages %}
+         <div class="flash-message">
+             {% for message in messages %}
+             <p>{{ message }}</p>
+             {% endfor %}
+         </div>
+         {% endif %}
+         {% endwith %}
+         <br/>
+        {% if download_link %}
+        <div class="download-link">
+            <a style='color:#b8a1db;' href="{{ url_for('download_file', file=download_link) }}">Download the classified dataset</a>
+        </div>
+        {% endif %}
+        <br/>
+        <a style='color:#b8a1db;' href="{{ url_for('home') }}">Classify Comments</a>        
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('csv-file');
+        const fileList = document.getElementById('file-list');
+
+        // Open file selector when the upload area is clicked
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Handle file selection
+        fileInput.addEventListener('change', () => {
+            displaySelectedFiles(fileInput.files);
+        });
+
+        // Handle drag-and-drop functionality
+        uploadArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = event.dataTransfer.files;
+            assignFilesToInput(files);  // Assign files using DataTransfer
+            displaySelectedFiles(files);
+        });
+
+        // Assign the dropped files to the input using DataTransfer
+        function assignFilesToInput(files) {
+            const dataTransfer = new DataTransfer();
+            for (const file of files) {
+                dataTransfer.items.add(file);
+            }
+            fileInput.files = dataTransfer.files;
+        }
+
+        // Display the names of selected files
+        function displaySelectedFiles(files) {
+            fileList.innerHTML = '';  // Clear the previous list
+            for (const file of files) {
+                const listItem = document.createElement('li');
+                listItem.textContent = file.name;
+                fileList.appendChild(listItem);
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classify a Comment</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #4b0082, #8a2be2);
+            color: #eae8f8;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #29254d;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        h2 {
+            color: #e0c3fc;
+        }
+
+        form {
+            margin: 20px 0;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            border-radius: 8px;
+            border: none;
+            padding: 10px;
+            font-size: 1rem;
+            resize: none;
+        }
+
+        button {
+            background: #6a4eb3;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #8a2be2;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #b8a1db;
+        }
+
+        .flash-message {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Enter a Product Review</h2>
+
+        <!-- Flash messages for invalid inputs -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-message">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/classify-comment">
+            <textarea name="comment" placeholder="Type your review here...">{{ request.form.comment or '' }}</textarea>
+            <br>
+            <button type="submit">Classify Sentiment</button>
+        </form>
+
+        {% if sentiment %}
+        <div class="result">
+            <p><strong>Sentiment:</strong> {{ sentiment }}</p>
+            <p><strong>Comment:</strong> "{{ comment }}"</p>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
