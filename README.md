@@ -61,7 +61,7 @@ This project focuses on developing a Natural Language Processing (NLP) model to 
 ---
 
 ## 📌 Future Improvements
-- Implement additional transformer architectures (e.g., **BERT, RoBERTa, XLNet**) for comparison.
+- Implement additional transformer architectures (e.g., **BERT, RoBERTa**) for comparison.
 - Optimize hyperparameter tuning for both traditional ML and deep learning models.
 - Integrate **explainability techniques** to interpret model predictions.
 - Enhance the UI/UX of the Streamlit app with additional insights and analytics.
